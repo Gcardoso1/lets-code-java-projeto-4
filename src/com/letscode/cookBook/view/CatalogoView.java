@@ -1,8 +1,8 @@
+
 package com.letscode.cookBook.view;
 
 import com.letscode.cookBook.controller.Catalogo;
 import com.letscode.cookBook.domain.Receita;
-import com.letscode.cookBook.domain.Rendimento;
 import com.letscode.cookBook.enums.Categoria;
 
 import java.util.Scanner;
@@ -10,10 +10,9 @@ import java.util.Scanner;
 public class CatalogoView {
     private final Receita NONE_FOUND = new Receita("Nenhuma receita encontrada", Categoria.PRATO_UNICO);
     private Receita receita;
-    Catalogo controller;
-    Rendimento rendimento;
+    private NovaReceitaView novaReceita = new NovaReceitaView();
+    Catalogo controller = new Catalogo();
     private int curIndex = -1;
-    NovaReceitaView novaReceita = new NovaReceitaView();
 
     private void showHeader() {
         ScreenUtil.printTextLine("", 80, true, '=');
@@ -43,14 +42,21 @@ public class CatalogoView {
 
     private void add() {
         //TODO: Implement Add
-        String nome = novaReceita.askNome();
-        Categoria categoria = novaReceita.askCategoria();
-        Receita novaReceita = new Receita(nome, categoria);
-        //novaReceita.setRendimento(rendimento.get);
-        novaReceita.setTempoPreparo(120);
-        controller.add(novaReceita);
+        this.receita = novaReceita.montarReceita();
+        this.controller.add(this.receita);
+        curIndex++;
+        show();
     }
 
+    private void search() {
+        if(controller.getAllReceitas().size() == 0){
+            System.out.println("Não há nenhuma receita cadastrada! Utilize o comando + para adicionar sua 1ª receita.");
+        } else {
+            this.receita = new PesquisaReceitaNew().pesquisa(controller);
+            curIndex = controller.getAllReceitas().indexOf(this.receita);
+            show();
+        }
+    }
 
     private void del() {
         if (curIndex >= 0) {
@@ -87,6 +93,7 @@ public class CatalogoView {
                     break;
                 case "S":
                     //TODO: Implement Search
+                    search();
                     break;
                 default:
                     ScreenUtil.printTextLine("Opção inválida", 80);

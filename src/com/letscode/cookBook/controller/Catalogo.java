@@ -39,11 +39,21 @@ public class Catalogo {
         return null;
     }
 
+    public List<Receita> getAllReceitas() {
+        return receitas;
+    }
+
     public Receita getReceita(int index) {
         if (index >= 0 && index < receitas.size()) {
             return receitas.get(index);
         }
         return null;
+    }
+
+    public Receita getFirst() {
+        if (receitas.isEmpty()) return null;
+
+        return getReceita(0);
     }
 
     public Receita getRandom() {
